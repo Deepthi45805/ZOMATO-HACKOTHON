@@ -1,0 +1,33 @@
+import pandas as pd
+from sklearn.metrics.pairwise import cosine_similarity
+
+# Example menu items
+items = ["Biryani", "Salan", "Gulab Jamun", "Soft Drink", "Fries", "Ice Cream"]
+
+# Example item feature vectors (simplified)
+data = {
+    "Biryani": [1,0,0,1],
+    "Salan": [1,0,1,0],
+    "Gulab Jamun": [0,1,1,0],
+    "Soft Drink": [0,1,0,1],
+    "Fries": [0,1,0,0],
+    "Ice Cream": [0,1,1,1]
+}
+
+df = pd.DataFrame(data).T
+
+# Compute similarity between items
+similarity = cosine_similarity(df)
+
+similarity_df = pd.DataFrame(similarity, index=items, columns=items)
+
+def recommend(cart_item, top_n=3):
+    scores = similarity_df[cart_item].sort_values(ascending=False)
+    recommendations = scores.iloc[1:top_n+1].index.tolist()
+    return recommendations
+
+# Example cart item
+cart = "Biryani"
+
+print("Items in Cart:", cart)
+print("Recommended Add-ons:", recommend(cart))
